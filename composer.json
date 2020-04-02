@@ -1,0 +1,21 @@
+{
+    "name": "willy68/pgconsole",
+    "description": "Application console pour pgframework",
+    "type": "library",
+    "require": {
+        "symfony/console": "^5.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "William Lety",
+            "email": "william.lety@gmail.com"
+        }
+    ],
+    "bin": ["bin/generate"],
+    "autoload": {
+        "psr-4": {
+            "Application\\Console\\": "src"
+        }
+    }
+}
