@@ -41,7 +41,7 @@ putenv("ENV=dev");
 
 $app = new ConsoleApplication([
     __DIR__ . '/config/config.php',
-    __DIR__ . '/../../../config/database.php'
+    dirname(dirname(dirname(__DIR__))) . '/config/database.php'
 ]);
 
 $c = $app->getContainer();
