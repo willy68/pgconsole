@@ -13,22 +13,8 @@ class AbstractCommand extends SymfonyCommand
 
     public function __construct()
     {
-        $this->controllerDir = dirname(
-            dirname(
-                __DIR__
-            )
-        ) .
-            DIRECTORY_SEPARATOR .
-            'generated_controllers'
-        ;
-        $this->modelDir = dirname(
-            dirname(
-                __DIR__
-            )
-        ) .
-            DIRECTORY_SEPARATOR .
-            'generated_models'
-        ;
+        $this->controllerDir = 'generated_controllers';
+        $this->modelDir = 'generated_models';
         parent::__construct();
     }
 
