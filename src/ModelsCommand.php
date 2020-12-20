@@ -9,6 +9,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 class ModelsCommand extends AbstractModelCommand
 {
@@ -59,53 +60,53 @@ class ModelsCommand extends AbstractModelCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $namespace = $input->getOption('namespace');
-        $io = new SymfonyStyle($input, $output);
         if ($namespace) {
             $this->namespace = $namespace;
         }
         $this->template = $input->getOption('template');
         $this->dir = $input->getOption('dir');
 
-        return $this->makeModels($io);
+        return $this->makeModels($input, $output);
     }
 
     /**
      * 
      *
-     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
      */
-    public function makeModels(SymfonyStyle $io): int
+    public function makeModels(InputInterface $input, OutputInterface $output): int
     {
+        /** @var ConsoleOutputInterface $output */
+        $sectionDir = $output->section();
+        $io = new SymfonyStyle($input, $sectionDir);
         $tables = $this->getTables($this->query . $this->db);
   
         $dir = $this->dir ? $this->dir : $this->modelDir;
-        if ($this->createDir($dir, $io) === -1) {
+        if ($this->createDir($dir, $sectionDir) === -1) {
             $io->error('Fin du programme: Wrong directory');
             return -1;
         }
-        $io->newLine();
+        $io->write("Creation du dossier " . $dir);
 
         $table = $tables->fetchAll(\PDO::FETCH_NUM);
-        $io->progressStart(count($table));
+        $sectionFile = $output->section();
+        $sectionBar = $output->section();
+        $ioBar = new SymfonyStyle($input, $sectionBar);
+        $ioBar->progressStart(count($table));
         foreach($table as $tab) {
             $model = $tab[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
-            if ($this->saveModel($model, $file, $io) === -1) {
-                $io->progressAdvance();
+            if ($this->saveModel($model, $file, $sectionFile) === -1) {
+                $io->error("Le fichier " . $file . " existe déjà, opération non permise");
+                $ioBar->progressAdvance();
                 continue;
             }
-            $io->progressAdvance();
+            $sectionFile->overwrite("Ecriture du fichier " . $file);
+            $ioBar->progressAdvance();
         }
-  /*
-        while ($table = $tables->fetch(\PDO::FETCH_NUM)) {
-            $model = $table[0];
-            $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
-            if ($this->saveModel($model, $file, $io) === -1) {
-                continue;
-            }
-        }*/
-        $io->progressFinish();
+        $ioBar->progressFinish();
         return 0;
     }
 }
