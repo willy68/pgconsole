@@ -84,14 +84,28 @@ class ModelsCommand extends AbstractModelCommand
             $io->error('Fin du programme: Wrong directory');
             return -1;
         }
-  
+        $io->newLine();
+
+        $table = $tables->fetchAll(\PDO::FETCH_NUM);
+        $io->progressStart(count($table));
+        foreach($table as $tab) {
+            $model = $tab[0];
+            $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
+            if ($this->saveModel($model, $file, $io) === -1) {
+                $io->progressAdvance();
+                continue;
+            }
+            $io->progressAdvance();
+        }
+  /*
         while ($table = $tables->fetch(\PDO::FETCH_NUM)) {
             $model = $table[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
             if ($this->saveModel($model, $file, $io) === -1) {
                 continue;
             }
-        }
+        }*/
+        $io->progressFinish();
         return 0;
     }
 }
