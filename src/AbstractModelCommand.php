@@ -2,7 +2,7 @@
 
 namespace Application\Console;
 
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AbstractModelCommand extends AbstractCommand
 {
@@ -10,10 +10,10 @@ class AbstractModelCommand extends AbstractCommand
     public function saveModel(
         string $modelName,
         string $filename,
-        OutputInterface $output
+        SymfonyStyle $io
     ): int {
         $model = $this->getActiveRecordPHP($modelName);
-        return $this->saveFile($model, $filename, $output);
+        return $this->saveFile($model, $filename, $io);
     }
 
     /**

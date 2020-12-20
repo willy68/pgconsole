@@ -13,6 +13,9 @@
             "email": "william.lety@gmail.com"
         }
     ],
+    "config": {
+        "bin-dir": "bin"
+    },
     "bin": ["bin/generate"],
     "autoload": {
         "psr-4": {

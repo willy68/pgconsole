@@ -14,8 +14,8 @@ class ConsoleApplication extends Application
 
     public function __construct(
         array $config,
-        string $name = 'UNKNOWN',
-        string $version = 'UNKNOWN'
+        string $name = 'generate',
+        string $version = '0.0.1'
     ) {
         parent::__construct($name, $version);
         $this->config = $config;

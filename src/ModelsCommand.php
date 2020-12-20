@@ -5,6 +5,7 @@ namespace Application\Console;
 use PDO;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -58,35 +59,36 @@ class ModelsCommand extends AbstractModelCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $namespace = $input->getOption('namespace');
+        $io = new SymfonyStyle($input, $output);
         if ($namespace) {
             $this->namespace = $namespace;
         }
         $this->template = $input->getOption('template');
         $this->dir = $input->getOption('dir');
 
-        return $this->makeModels($output);
+        return $this->makeModels($io);
     }
 
     /**
+     * 
      *
-     *
-     * @param OutputInterface $output
+     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
      * @return int
      */
-    public function makeModels(OutputInterface $output): int
+    public function makeModels(SymfonyStyle $io): int
     {
         $tables = $this->getTables($this->query . $this->db);
   
         $dir = $this->dir ? $this->dir : $this->modelDir;
-        if ($this->createDir($dir, $output) === -1) {
-            $output->writeln('Fin du programme: Wrong directory');
+        if ($this->createDir($dir, $io) === -1) {
+            $io->error('Fin du programme: Wrong directory');
             return -1;
         }
   
         while ($table = $tables->fetch(\PDO::FETCH_NUM)) {
             $model = $table[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
-            if ($this->saveModel($model, $file, $output) === -1) {
+            if ($this->saveModel($model, $file, $io) === -1) {
                 continue;
             }
         }

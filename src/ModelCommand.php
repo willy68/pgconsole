@@ -3,6 +3,7 @@
 namespace Application\Console;
 
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,8 +29,9 @@ class ModelCommand extends AbstractModelCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->model = $input->getOption('table');
+        $io = new SymfonyStyle($input, $output);
         if (!$this->model) {
-            $output->writeln('Le nom model est obligatoire');
+            $io->caution('Le nom du model est obligatoire');
             return -1;
         }
         $namespace = $input->getOption('namespace');
@@ -39,28 +41,28 @@ class ModelCommand extends AbstractModelCommand
         // $this->template = $input->getOption('template');
         $this->dir = $input->getOption('dir');
 
-        return $this->makeModel($output);
+        return $this->makeModel($io);
     }
 
     /**
+     * 
      *
-     *
-     * @param OutputInterface $output
+     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
      * @return int
      */
-    public function makeModel(OutputInterface $output): int
+    public function makeModel(SymfonyStyle $io): int
     {
         $model = $this->model;
         $dir = $this->dir ? $this->dir
             : $this->modelDir;
-        if ($this->createDir($dir, $output) === -1) {
-            $output->writeln('Fin du programme: Wrong directory');
+        if ($this->createDir($dir, $io) === -1) {
+            $io->error('Fin du programme: Wrong directory');
             return -1;
         }
 
         $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
-        if ($this->saveModel($model, $file, $output) === -1) {
-            $output->writeln('Fin du programme: Wrong file' . $file);
+        if ($this->saveModel($model, $file, $io) === -1) {
+            $io->error('Fin du programme: Wrong file' . $file);
             return -1;
         }
         return 0;

@@ -8,9 +8,7 @@
  */
 return function () {
     $files = [
-      __DIR__ . '/../../../autoload.php', // composer dependency
       __DIR__ . '/../vendor/autoload.php', // stand-alone package
-      __DIR__ . '/../../../vendor/autoload.php', // stand-alone package as git sub module
     ];
     foreach ($files as $file) {
         if (is_file($file)) {

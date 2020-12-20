@@ -2,8 +2,8 @@
 
 namespace Application\Console;
 
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class AbstractCommand extends SymfonyCommand
 {
@@ -19,47 +19,47 @@ class AbstractCommand extends SymfonyCommand
     }
 
     /**
-     * create dir
+     * Create dir
      *
      * @param string $dir
-     * @param OutputInterface $output
+     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
      * @return int
      */
-    protected function createDir(string $dir, OutputInterface $output): int
+    protected function createDir(string $dir, SymfonyStyle $io): int
     {
         if (!is_dir($dir)) {
             $oldumask = umask(0);
             if (!mkdir($dir, 0777, true)) {
                 umask($oldumask);
-                $output->writeln('Impossible de créer le dossier ' . $dir);
+                $io->error('Impossible de créer le dossier ' . $dir);
                 return -1;
             }
             umask($oldumask);
-            $output->writeln("Creation du dossier " . $dir);
+            $io->text("Creation du dossier " . $dir);
         }
         return 0;
     }
 
     /**
-     *
+     * Save file
      *
      * @param string $model
      * @param string $filename
-     * @param OutputInterface $output
+     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
      * @return int
      */
-    protected function saveFile(string $model, string $filename, OutputInterface $output): int
+    protected function saveFile(string $model, string $filename, SymfonyStyle $io): int
     {
         if (!file_exists($filename)) {
             if (($handle = fopen($filename, 'x'))) {
                 fwrite($handle, $model);
                 fclose($handle);
                 chmod($filename, 0666);
-                $output->writeln("Ecriture du fichier " . $filename);
+                $io->text("Ecriture du fichier " . $filename);
                 return 0;
             }
         } else {
-            $output->writeln("Le fichier " . $filename . " existe déjà, opération non permise");
+            $io->caution("Le fichier " . $filename . " existe déjà, opération non permise");
             return -1;
         }
     }
