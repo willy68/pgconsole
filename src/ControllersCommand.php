@@ -97,7 +97,7 @@ class ControllersCommand extends AbstractPHPCommand
         foreach ($table as $tab) { 
             $modelName = $tab[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($modelName) . 'Controller.php';
-            if ($this->saveController($modelName, $file, $io) === -1) {
+            if ($this->saveController($modelName, $file) === -1) {
                 $io->error("Le fichier " . $file . " existe déjà, opération non permise");
                 $ioBar->progressAdvance();
                 continue;

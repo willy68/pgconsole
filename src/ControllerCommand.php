@@ -69,7 +69,7 @@ class ControllerCommand extends AbstractPHPCommand
 
         $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . 'Controller.php';
         $sectionFile = $output->section();
-        if ($this->saveController($model, $file, $io) === -1) {
+        if ($this->saveController($model, $file) === -1) {
             $io->error('Fin du programme: Wrong file' . $file);
             return -1;
         }
