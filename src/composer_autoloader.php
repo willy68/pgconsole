@@ -9,7 +9,7 @@
 return function () {
     $files = [
       __DIR__ . '/../vendor/autoload.php', // stand-alone package vendor/bin
-      dirname(__DIR__) . '/vendor/autoload.php', // stand-alone package bin dir symlink
+      __DIR__ . '/../../../../vendor/autoload.php', // stand-alone package bin dir symlink
     ];
     foreach ($files as $file) {
         if (is_file($file)) {
