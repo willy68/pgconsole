@@ -92,6 +92,8 @@ class ModelsCommand extends AbstractModelCommand
 
         $table = $tables->fetchAll(\PDO::FETCH_NUM);
         $sectionFile = $output->section();
+        /** @var FormatterHelper $formatter */
+        $formatter = $this->getHelper('formatter');
         $sectionBar = $output->section();
         $ioBar = new SymfonyStyle($input, $sectionBar);
         $ioBar->progressStart(count($table));
@@ -99,8 +101,13 @@ class ModelsCommand extends AbstractModelCommand
             $model = $tab[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
             if ($this->saveModel($model, $file, $sectionFile) === -1) {
-                $io->error("Le fichier " . $file . " existe déjà, opération non permise");
+                $formattedFileSection = $formatter->formatBlock(
+                    "Le fichier " . $file . " existe déjà, opération non permise", 
+                    'error'
+                );
+                $sectionFile->overwrite($formattedFileSection);
                 $ioBar->progressAdvance();
+                usleep(500000);
                 continue;
             }
             $sectionFile->overwrite("<info>Ecriture du fichier " . $file . "</info>");

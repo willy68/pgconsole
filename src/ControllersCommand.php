@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ControllersCommand extends AbstractPHPCommand
@@ -90,6 +91,8 @@ class ControllersCommand extends AbstractPHPCommand
 
         $table = $tables->fetchAll(\PDO::FETCH_NUM);
         $sectionFile = $output->section();
+        /** @var FormatterHelper $formatter */
+        $formatter = $this->getHelper('formatter');
         $sectionBar = $output->section();
         $ioBar = new SymfonyStyle($input, $sectionBar);
         $ioBar->progressStart(count($table));
@@ -97,8 +100,13 @@ class ControllersCommand extends AbstractPHPCommand
             $modelName = $tab[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($modelName) . 'Controller.php';
             if ($this->saveController($modelName, $file) === -1) {
-                $io->error("Le fichier " . $file . " existe déjà, opération non permise");
+                $formattedFileSection = $formatter->formatBlock(
+                    "Le fichier " . $file . " existe déjà, opération non permise", 
+                    'error'
+                );
+                $sectionFile->overwrite($formattedFileSection);
                 $ioBar->progressAdvance();
+                usleep(500000);
                 continue;
             }
             $sectionFile->overwrite("<info>Ecriture du fichier " . $file . "</info>");
