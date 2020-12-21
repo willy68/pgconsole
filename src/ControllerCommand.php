@@ -43,30 +43,37 @@ class ControllerCommand extends AbstractPHPCommand
 
         $model = ucfirst($this->model);
         $io->text("Create {$model}Controller.php");
-        return $this->makeController($io);
+        return $this->makeController($input, $output);
     }
 
     /**
      * Make single controller
      *
-     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
      */
-    public function makeController(SymfonyStyle $io): int
+    public function makeController(InputInterface $input, OutputInterface $output): int
     {
         $model = $this->model;
         $dir = $this->dir ? $this->dir
             : $this->controllerDir;
-        if ($this->createDir($dir, $io) === -1) {
+        /** @var ConsoleOutputInterface $output */
+        $sectionDir = $output->section();
+        $io = new SymfonyStyle($input, $sectionDir);
+        if ($this->createDir($dir) === -1) {
             $io->caution('Fin du programme: Wrong directory');
             return -1;
         }
+        $io->write("<info>Creation du dossier " . $dir . "</info>");
 
         $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . 'Controller.php';
+        $sectionFile = $output->section();
         if ($this->saveController($model, $file, $io) === -1) {
             $io->error('Fin du programme: Wrong file' . $file);
             return -1;
         }
+        $sectionFile->overwrite("<info>Ecriture du fichier " . $file . "</info>");
         return 0;
     }
 }

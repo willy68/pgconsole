@@ -2,19 +2,15 @@
 
 namespace Application\Console;
 
-use Symfony\Component\Console\Output\ConsoleSectionOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-
 class AbstractModelCommand extends AbstractCommand
 {
 
     public function saveModel(
         string $modelName,
-        string $filename,
-        ConsoleSectionOutput $section
+        string $filename
     ): int {
         $model = $this->getActiveRecordPHP($modelName);
-        return $this->saveFile($model, $filename, $section);
+        return $this->saveFile($model, $filename);
     }
 
     /**

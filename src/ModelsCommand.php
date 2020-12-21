@@ -84,11 +84,11 @@ class ModelsCommand extends AbstractModelCommand
         $tables = $this->getTables($this->query . $this->db);
   
         $dir = $this->dir ? $this->dir : $this->modelDir;
-        if ($this->createDir($dir, $sectionDir) === -1) {
+        if ($this->createDir($dir) === -1) {
             $io->error('Fin du programme: Wrong directory');
             return -1;
         }
-        $io->write("Creation du dossier " . $dir);
+        $io->write("<info>Creation du dossier " . $dir . "</info>");
 
         $table = $tables->fetchAll(\PDO::FETCH_NUM);
         $sectionFile = $output->section();
@@ -103,8 +103,9 @@ class ModelsCommand extends AbstractModelCommand
                 $ioBar->progressAdvance();
                 continue;
             }
-            $sectionFile->overwrite("Ecriture du fichier " . $file);
+            $sectionFile->overwrite("<info>Ecriture du fichier " . $file . "</info>");
             $ioBar->progressAdvance();
+            usleep(500000);
         }
         $ioBar->progressFinish();
         return 0;

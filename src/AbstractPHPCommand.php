@@ -2,8 +2,6 @@
 
 namespace Application\Console;
 
-use Symfony\Component\Console\Style\SymfonyStyle;
-
 class AbstractPHPCommand extends AbstractCommand
 {
 
@@ -20,16 +18,14 @@ class AbstractPHPCommand extends AbstractCommand
      *
      * @param string $modelName
      * @param string $filename
-     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
      * @return int
      */
     protected function saveController(
         string $modelName,
-        string $filename,
-        SymfonyStyle $io
+        string $filename
     ): int {
         $php = $this->getPHPController($modelName);
-        return $this->saveFile($php, $filename, $io);
+        return $this->saveFile($php, $filename);
     }
     
     /**
