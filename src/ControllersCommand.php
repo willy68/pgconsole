@@ -58,7 +58,6 @@ class ControllersCommand extends AbstractPHPCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $namespace = $input->getOption('namespace');
-        $io = new SymfonyStyle($input, $output);
         if ($namespace) {
             $this->namespace = $namespace;
         }
