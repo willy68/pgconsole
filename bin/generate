@@ -43,14 +43,14 @@ putenv("ENV=dev");
 $basePath = dirname(dirname(dirname(dirname(__DIR__))));
 
 $config[] = dirname(__DIR__) . '/config/config.php';
-if (is_file($basePath . '/config/database.php')) {
+if (file_exists($basePath . '/config/database.php')) {
     $config[] = $basePath . '/config/database.php';
 }
 else {
     $config[] = dirname(__DIR__) . '/config/database.php';
 }
 
-if (is_file($basePath . '/.env') && class_exists(Dotenv::class)) {
+if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
     $dotenv = new Dotenv();
     $dotenv->loadEnv($basePath . '/.env');
 }
