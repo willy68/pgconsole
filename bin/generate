@@ -36,13 +36,26 @@ if (!$autoloader()) {
 
 use Application\Console\ConsoleApplication;
 use Application\Console\DICommandLoader;
+use Symfony\Component\Dotenv\Dotenv;
 
 putenv("ENV=dev");
 
-$app = new ConsoleApplication([
-    dirname(__DIR__) . '/config/config.php',
-    dirname(__DIR__) . '/../../../config/database.php'
-]);
+$basePath = dirname(dirname(dirname(dirname(__DIR__))));
+
+$config[] = dirname(__DIR__) . '/config/config.php';
+if (is_file($basePath . '/config/database.php')) {
+    $config[] = $basePath . '/config/database.php';
+}
+else {
+    $config[] = dirname(__DIR__) . '/config/database.php';
+}
+
+if (is_file($basePath . '/.env') && class_exists(Dotenv::class)) {
+    $dotenv = new Dotenv();
+    $dotenv->loadEnv($basePath . '/.env');
+}
+
+$app = new ConsoleApplication($config);
 
 $c = $app->getContainer();
 $app->setCommandLoader(DICommandLoader::getDICommandLoader($c));
