@@ -25,7 +25,7 @@ class GenerateAppKeyCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $this->getRandomKey();
         $appKey = 'base64:' . $key;
@@ -48,6 +48,7 @@ class GenerateAppKeyCommand extends Command
 
         $io->info("Application key [$key] set successfully.");
         
+        return 0;
     }
 
     /**
