@@ -12,13 +12,17 @@ class ConsoleApplication extends Application
 
     public $config = [];
 
+    public $basePath;
+
     public function __construct(
         array $config,
+        string $basePath = __DIR__,
         string $name = 'generate',
         string $version = '0.0.1'
     ) {
         parent::__construct($name, $version);
         $this->config = $config;
+        $this->basePath = $basePath;
     }
 
     /**
@@ -42,5 +46,15 @@ class ConsoleApplication extends Application
             $this->container = $builder->build();
         }
         return $this->container;
+    }
+
+    /**
+     * return base path
+     *
+     * @return string
+     */
+    public function getBasePath(): string
+    {
+        return $this->basePath;
     }
 }

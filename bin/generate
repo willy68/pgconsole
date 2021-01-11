@@ -55,7 +55,7 @@ if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
     $dotenv->loadEnv($basePath . '/.env');
 }
 
-$app = new ConsoleApplication($config);
+$app = new ConsoleApplication($config, $basePath);
 
 $c = $app->getContainer();
 $app->setCommandLoader(DICommandLoader::getDICommandLoader($c));

@@ -14,7 +14,8 @@ class DICommandLoader
             'controller' => ControllerCommand::class,
             'controller:all' => ControllersCommand::class,
             'model' => ModelCommand::class,
-            'model:all' => ModelsCommand::class
+            'model:all' => ModelsCommand::class,
+            'key:generate' => GenerateAppKeyCommand::class
         ]);
     }
 }
