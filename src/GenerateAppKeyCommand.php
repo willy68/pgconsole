@@ -28,7 +28,6 @@ class GenerateAppKeyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $this->getRandomKey();
-        $appKey = 'base64:' . $key;
 
         $io = new SymfonyStyle($input, $output);
         if ($input->getOption('show')) {
@@ -42,7 +41,7 @@ class GenerateAppKeyCommand extends Command
         if (file_exists($path)) {
             file_put_contents(
                 $path,
-                preg_replace('/(APP_KEY=)(\s|.*)\n/', ("APP_KEY={$appKey}\n"), file_get_contents($path))
+                preg_replace('/(APP_KEY=)(\s|.*)\n/', ("APP_KEY={$key}\n"), file_get_contents($path))
             );
         }
 
