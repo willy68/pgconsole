@@ -59,6 +59,8 @@ EOF;
         file_put_contents($path.'.local.php', $vars, LOCK_EX);
 
         $io->write('<comment> Successfully dumped .env files in <info>.env.local.php</> </comment>');
+
+        return 0;
     }
 
     private function loadEnv(string $path, string $env)
