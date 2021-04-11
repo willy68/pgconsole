@@ -63,7 +63,6 @@ EOF;
 
     private function loadEnv(string $path, string $env)
     {
-        require $this->config->get('vendor-dir').'/autoload.php';
 
         if (!class_exists(Dotenv::class)) {
             throw new \RuntimeException('Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.');
