@@ -16,7 +16,8 @@ class DICommandLoader
             'model' => ModelCommand::class,
             'model:all' => ModelsCommand::class,
             'key:generate' => GenerateAppKeyCommand::class,
-            'dump-env' => DumpEnvCommand::class
+            'dump-env' => DumpEnvCommand::class,
+            'doctrine:database:create' => CreateDatabaseDoctrineCommand::class
         ]);
     }
 }
