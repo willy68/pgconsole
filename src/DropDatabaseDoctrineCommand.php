@@ -1,12 +1,15 @@
 <?php
+/*
+ *  From Doctrine Bundle Symfony
+*/
 
 namespace Application\Console;
 
 use Doctrine\DBAL\DriverManager;
-use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use InvalidArgumentException;
 use Throwable;
 
 use function in_array;
@@ -79,24 +82,6 @@ EOT
             $params                  = $params['master'];
             $params['driverOptions'] = $driverOptions;
         }
-
-        /*
-        if (isset($params['shards'])) {
-            $shards = $params['shards'];
-            // Default select global
-            $params = array_merge($params, $params['global'] ?? []);
-            if ($input->getOption('shard')) {
-                foreach ($shards as $shard) {
-                    if ($shard['id'] === (int) $input->getOption('shard')) {
-                        // Select sharded database
-                        $params = array_merge($params, $shard);
-                        unset($params['id']);
-                        break;
-                    }
-                }
-            }
-        }
-        */
 
         $name = $params['path'] ?? ($params['dbname'] ?? false);
         if (! $name) {

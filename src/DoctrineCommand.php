@@ -1,7 +1,6 @@
 <?php
-
 /*
-    From Doctrine Bundle Symfony
+ *  From Doctrine Bundle Symfony
 */
 
 namespace Application\Console;
@@ -51,28 +50,12 @@ abstract class DoctrineCommand extends Command
      * Get a doctrine entity manager by symfony name.
      *
      * @param string   $name
-     * @param int|null $shardId
      *
      * @return EntityManager
      */
-    protected function getEntityManager($name, $shardId = null)
+    protected function getEntityManager($name)
     {
         $manager = $this->getDoctrine()->getManager($name);
-
-        /*
-        if ($shardId) {
-            if (! $manager instanceof EntityManagerInterface) {
-                throw new LogicException(sprintf('Sharding is supported only in EntityManager of instance "%s".', EntityManagerInterface::class));
-            }
-
-            $connection = $manager->getConnection();
-            if (! $connection instanceof PoolingShardConnection) {
-                throw new LogicException(sprintf("Connection of EntityManager '%s' must implement shards configuration.", $name));
-            }
-
-            $connection->connect($shardId);
-        }
-        */
 
         return $manager;
     }

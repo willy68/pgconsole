@@ -1,19 +1,17 @@
 <?php
-
 /*
-    From Doctrine Bundle Symfony
+ *  From Doctrine Bundle Symfony
 */
 
 namespace Application\Console;
 
 use Doctrine\DBAL\DriverManager;
-use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use InvalidArgumentException;
 use Throwable;
 
-use function array_merge;
 use function in_array;
 use function sprintf;
 
@@ -76,27 +74,6 @@ EOT
             $params['driverOptions'] = $driverOptions;
         }
 
-        /*
-        // Cannot inject `shard` option in parent::getDoctrineConnection
-        // cause it will try to connect to a non-existing database
-        if (isset($params['shards'])) {
-            $shards = $params['shards'];
-            // Default select global
-            $params = array_merge($params, $params['global'] ?? []);
-            unset($params['global']['dbname'], $params['global']['path'], $params['global']['url']);
-            if ($input->getOption('shard')) {
-                foreach ($shards as $i => $shard) {
-                    if ($shard['id'] === (int) $input->getOption('shard')) {
-                        // Select sharded database
-                        $params = array_merge($params, $shard);
-                        unset($params['shards'][$i]['dbname'], $params['shards'][$i]['path'], $params['shards'][$i]['url'], $params['id']);
-                        break;
-                    }
-                }
-            }
-        }
-        */
-
         $hasPath = isset($params['path']);
         $name    = $hasPath ? $params['path'] : ($params['dbname'] ?? false);
         if (! $name) {
@@ -107,13 +84,7 @@ EOT
         unset($params['dbname'], $params['path'], $params['url']);
 
         $tmpConnection = DriverManager::getConnection($params);
-        /*
-        if ($tmpConnection instanceof PoolingShardConnection) {
-            $tmpConnection->connect($input->getOption('shard'));
-        } else {
-        */
-            $tmpConnection->connect();
-        //}
+        $tmpConnection->connect();
 
         $shouldNotCreateDatabase = $ifNotExists && in_array($name, $tmpConnection->getSchemaManager()->listDatabases());
 

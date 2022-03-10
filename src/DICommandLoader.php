@@ -11,10 +11,10 @@ class DICommandLoader
     public static function getDICommandLoader(ContainerInterface $c): CommandLoaderInterface
     {
         return new ContainerCommandLoader($c, [
-            'controller' => ControllerCommand::class,
-            'controller:all' => ControllersCommand::class,
-            'model' => ModelCommand::class,
-            'model:all' => ModelsCommand::class,
+            //'controller' => ControllerCommand::class,
+            //'controller:all' => ControllersCommand::class,
+            //'model' => ModelCommand::class,
+            //'model:all' => ModelsCommand::class,
             'key:generate' => GenerateAppKeyCommand::class,
             'dump-env' => DumpEnvCommand::class,
             'doctrine:database:create' => CreateDatabaseDoctrineCommand::class
