@@ -40,7 +40,7 @@ use Symfony\Component\Dotenv\Dotenv;
 
 $basePath = dirname(dirname(dirname(dirname(__DIR__))));
 
-require $basePath . 'app/Bootstrap/Bootstrap.php';
+require $basePath . '/app/Bootstrap/Bootstrap.php';
 
 if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
     $dotenv = new Dotenv();
