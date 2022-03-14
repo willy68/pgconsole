@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class ModelsCommand extends AbstractModelCommand
 {
     use DatabaseCommandTrait;
-    
+
     /**
      *
      *
@@ -71,7 +71,7 @@ class ModelsCommand extends AbstractModelCommand
     }
 
     /**
-     * 
+     *
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
@@ -83,7 +83,7 @@ class ModelsCommand extends AbstractModelCommand
         $sectionDir = $output->section();
         $io = new SymfonyStyle($input, $sectionDir);
         $tables = $this->getTables($this->query . $this->db);
-  
+
         $dir = $this->dir ? $this->dir : $this->modelDir;
         if ($this->createDir($dir) === -1) {
             $io->error('Fin du programme: Wrong directory');
@@ -98,12 +98,12 @@ class ModelsCommand extends AbstractModelCommand
         $sectionBar = $output->section();
         $ioBar = new SymfonyStyle($input, $sectionBar);
         $ioBar->progressStart(count($table));
-        foreach($table as $tab) {
+        foreach ($table as $tab) {
             $model = $tab[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
             if ($this->saveModel($model, $file, $sectionFile) === -1) {
                 $formattedFileSection = $formatter->formatBlock(
-                    "Le fichier " . $file . " existe déjà, opération non permise", 
+                    "Le fichier " . $file . " existe déjà, opération non permise",
                     'error'
                 );
                 $sectionFile->overwrite($formattedFileSection);

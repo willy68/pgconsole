@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 class ModelCommand extends AbstractModelCommand
 {
-
     protected function configure()
     {
         $this->setName('model')
@@ -46,7 +45,7 @@ class ModelCommand extends AbstractModelCommand
     }
 
     /**
-     * 
+     *
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output

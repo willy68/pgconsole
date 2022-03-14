@@ -6,7 +6,6 @@ use Psr\Container\ContainerInterface;
 
 trait DatabaseCommandTrait
 {
-
     /**
      * Undocumented function
      *
@@ -18,7 +17,7 @@ trait DatabaseCommandTrait
         $tables = $this->dao->query($query);
         return $tables;
     }
-  
+
     /**
      * Undocumented function
      *
@@ -30,7 +29,7 @@ trait DatabaseCommandTrait
         $columns = $this->dao->query($query);
         return $columns;
     }
-  
+
     /**
      * Undocumented function
      *
@@ -47,7 +46,7 @@ trait DatabaseCommandTrait
     }
 
     /**
-     * 
+     *
      *
      * @param string $db
      * @param string $table
@@ -65,7 +64,7 @@ trait DatabaseCommandTrait
     }
 
     /**
-     * 
+     *
      *
      * @param string $db
      * @param string $table
@@ -115,7 +114,7 @@ trait DatabaseCommandTrait
     }
 
     /**
-     * 
+     *
      *
      * @param \Psr\Container\ContainerInterface $c
      * @return \PDO

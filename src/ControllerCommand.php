@@ -10,7 +10,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ControllerCommand extends AbstractPHPCommand
 {
-
     protected function configure()
     {
         $this->setName('controller')

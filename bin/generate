@@ -58,5 +58,5 @@ else {
 $console = new ConsoleApplication($config, $basePath);
 
 $c = $app->getContainer();
-$console->setCommandLoader(DICommandLoader::getDICommandLoader($c));
+$console->setCommandLoader(DICommandLoader::getDICommandLoader($c, $c->get('console.commands')));
 $console->run();

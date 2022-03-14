@@ -96,12 +96,12 @@ class ControllersCommand extends AbstractPHPCommand
         $sectionBar = $output->section();
         $ioBar = new SymfonyStyle($input, $sectionBar);
         $ioBar->progressStart(count($table));
-        foreach ($table as $tab) { 
+        foreach ($table as $tab) {
             $modelName = $tab[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($modelName) . 'Controller.php';
             if ($this->saveController($modelName, $file) === -1) {
                 $formattedFileSection = $formatter->formatBlock(
-                    "Le fichier " . $file . " existe déjà, opération non permise", 
+                    "Le fichier " . $file . " existe déjà, opération non permise",
                     'error'
                 );
                 $sectionFile->overwrite($formattedFileSection);

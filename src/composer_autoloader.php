@@ -6,6 +6,7 @@
  *
  * @return bool
  */
+
 return function () {
     $files = [
       __DIR__ . '/../vendor/autoload.php', // stand-alone package vendor/bin

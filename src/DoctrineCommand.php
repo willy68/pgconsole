@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  From Doctrine Bundle Symfony
 */

@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateAppKeyCommand extends Command
 {
-
     protected function configure()
     {
         $this->setName('key:generate')
@@ -46,7 +45,7 @@ class GenerateAppKeyCommand extends Command
         }
 
         $io->info("Application key [$key] set successfully.");
-        
+
         return 0;
     }
 

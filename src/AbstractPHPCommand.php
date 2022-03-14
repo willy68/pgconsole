@@ -4,7 +4,6 @@ namespace Application\Console;
 
 class AbstractPHPCommand extends AbstractCommand
 {
-
     protected $model = null;
 
     protected $namespace = 'App\Api';
@@ -27,7 +26,7 @@ class AbstractPHPCommand extends AbstractCommand
         $php = $this->getPHPController($modelName);
         return $this->saveFile($php, $filename);
     }
-    
+
     /**
      * get parsed controller string
      *
@@ -37,7 +36,7 @@ class AbstractPHPCommand extends AbstractCommand
     protected function getPHPController(string $modelName): string
     {
         $modelClass = $this->getClassName($modelName);
-  
+
         if ($this->template && file_exists($this->template)) {
             $controller = include $this->template;
             return $controller;

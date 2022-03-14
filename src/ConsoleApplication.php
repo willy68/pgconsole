@@ -36,6 +36,7 @@ class ConsoleApplication extends Application
         if ($this->container === null) {
             $builder = new ContainerBuilder();
             $env = getenv('ENV') ?: 'production';
+            $env = 'dev';
             if ($env === 'production') {
                 $builder->enableCompilation('tmp/di');
                 $builder->writeProxiesToFile(true, 'tmp/proxies');

@@ -4,7 +4,6 @@ namespace Application\Console;
 
 class AbstractModelCommand extends AbstractCommand
 {
-
     public function saveModel(
         string $modelName,
         string $filename

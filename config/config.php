@@ -1,17 +1,15 @@
 <?php
 
-use Psr\Container\ContainerInterface;
+use Application\Console\DumpEnvCommand;
+use Application\Console\GenerateAppKeyCommand;
+use Application\Console\DropDatabaseDoctrineCommand;
+use Application\Console\CreateDatabaseDoctrineCommand;
 
 return [
-    PDO::class => function (ContainerInterface $c) {
-        return new PDO(
-            $c->get('database.sgdb') . ":host=" . $c->get('database.host') . ";dbname=" . $c->get('database.name'),
-            $c->get('database.user'),
-            $c->get('database.password'),
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
-            ]
-        );
-    }
+    "console.commands" => \DI\add([
+        'doctrine:database:create' => CreateDatabaseDoctrineCommand::class,
+        'doctrine:database:drop' => DropDatabaseDoctrineCommand::class,
+        'key:generate' => GenerateAppKeyCommand::class,
+        'dump-env' => DumpEnvCommand::class,
+    ])
 ];
