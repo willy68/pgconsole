@@ -6,5 +6,5 @@ use PgFramework\Module;
 
 class ConsoleModule extends Module
 {
-    public const DEFINITIONS = (__DIR__) . '/../config/cofig.php';
+    public const DEFINITIONS = (__DIR__) . '/../config/config.php';
 }
