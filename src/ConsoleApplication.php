@@ -17,7 +17,7 @@ class ConsoleApplication extends Application
     public function __construct(
         array $config,
         string $basePath = __DIR__,
-        string $name = 'generate',
+        string $name = 'PgConsole',
         string $version = '0.0.1'
     ) {
         parent::__construct($name, $version);
