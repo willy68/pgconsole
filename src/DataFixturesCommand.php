@@ -31,6 +31,12 @@ class DataFixturesCommand extends DoctrineCommand
                 'The directory or file to load data fixtures from.'
             )
             ->addOption(
+                'em',
+                'e',
+                InputOption::VALUE_OPTIONAL,
+                'The EntityManager name to use for this command'
+            )
+            ->addOption(
                 'append',
                 null,
                 InputOption::VALUE_NONE,
@@ -45,23 +51,31 @@ class DataFixturesCommand extends DoctrineCommand
             ->setHelp(<<<EOT
 The <info>fixtures:load</info> command loads data fixtures from the specified path:
 
-  <info>doctrine fixtures:load</info>
+  <info>console fixtures:load</info>
+
+You can specified EntityManager name for this operation
+  <info>console fixtures:load --em name</info>
 
 If you want to append the fixtures instead of flushing the database first you can use the <info>--append</info> option:
 
-  <info>doctrine fixtures:load --append</info>
+  <info>console fixtures:load --append</info>
 
 By default Doctrine Data Fixtures uses DELETE statements to drop the existing rows from
 the database. If you want to use a TRUNCATE statement instead you can use the <info>--purge-with-truncate</info> flag:
 
-  <info>doctrine fixtures:load --purge-with-truncate</info>
+  <info>console fixtures:load --purge-with-truncate</info>
 EOT
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getDoctrine()->getManager();
+        $emName = $input->getOption('em');
+        if (!empty($emName)) {
+            $em = $this->getDoctrine()->getManager($emName);
+        } else {
+            $em = $this->getDoctrine()->getManager();
+        }
 
         $dirOrFile = $input->getArgument('fixtures-path');
         if ($dirOrFile) {
