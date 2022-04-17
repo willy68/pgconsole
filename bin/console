@@ -24,18 +24,6 @@
  * IN THE SOFTWARE.
  */
 
-use Phar;
-use Composer\InstalledVersions;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Dotenv\Dotenv;
-use Application\Console\DICommandLoader;
-use Doctrine\Migrations\DependencyFactory;
-use Application\Console\ConsoleApplication;
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Doctrine\Migrations\Configuration\Migration\ConfigurationFileWithFallback;
-use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
-use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
-
 $autoloadFiles = [
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
@@ -52,7 +40,7 @@ foreach ($autoloadFiles as $autoloadFile) {
 }
 
 if (! $autoloaderFound) {
-    if (extension_loaded('phar') && Phar::running() !== '') {
+    if (extension_loaded('phar') && \Phar::running() !== '') {
         fwrite(STDERR, 'The PHAR was built without dependencies!' . PHP_EOL);
         exit(1);
     }
@@ -60,6 +48,17 @@ if (! $autoloaderFound) {
     fwrite(STDERR, 'vendor/autoload.php could not be found. Did you run `composer install`?' . PHP_EOL);
     exit(1);
 }
+
+use Composer\InstalledVersions;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Dotenv\Dotenv;
+use Application\Console\DICommandLoader;
+use Doctrine\Migrations\DependencyFactory;
+use Application\Console\ConsoleApplication;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\Migrations\Configuration\Migration\ConfigurationFileWithFallback;
+use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
+use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
 
 $basePath = dirname(__DIR__, 4);
 
