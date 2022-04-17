@@ -24,6 +24,18 @@
  * IN THE SOFTWARE.
  */
 
+use Composer\InstalledVersions;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Dotenv\Dotenv;
+use Application\Console\DICommandLoader;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Migrations\DependencyFactory;
+use Application\Console\ConsoleApplication;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\Migrations\Configuration\Migration\PhpFile;
+use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
+use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
+
 $autoloadFiles = [
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
@@ -48,17 +60,6 @@ if (! $autoloaderFound) {
     fwrite(STDERR, 'vendor/autoload.php could not be found. Did you run `composer install`?' . PHP_EOL);
     exit(1);
 }
-
-use Composer\InstalledVersions;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Dotenv\Dotenv;
-use Application\Console\DICommandLoader;
-use Doctrine\Migrations\DependencyFactory;
-use Application\Console\ConsoleApplication;
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Doctrine\Migrations\Configuration\Migration\ConfigurationFileWithFallback;
-use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
-use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
 
 $basePath = dirname(__DIR__, 4);
 
@@ -89,9 +90,8 @@ $console->setHelperSet($helperSet);
 ConsoleRunner::addCommands($console);
 
 // Migrations commands
-$configurations = new ConfigurationFileWithFallback();
-
-$Manager = $app->getContainer()->get(ManagerRegistry::class);
+$configurations = new PhpFile(getcwd() . DIRECTORY_SEPARATOR . 'migrations.php');
+$Manager = $c->get(ManagerRegistry::class);
 
 $dependencyFactory = DependencyFactory::fromEntityManager(
     $configurations,
