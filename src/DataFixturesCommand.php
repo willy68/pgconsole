@@ -27,7 +27,7 @@ class DataFixturesCommand extends DoctrineCommand
             ->setDescription('Load data fixtures to your database.')
             ->addArgument(
                 'fixtures-path',
-                InputArgument::REQUIRED,
+                InputArgument::REQUIRED | InputArgument::IS_ARRAY,
                 'The directory or file to load data fixtures from.'
             )
             ->addOption(
@@ -51,10 +51,10 @@ class DataFixturesCommand extends DoctrineCommand
             ->setHelp(<<<EOT
 The <info>fixtures:load</info> command loads data fixtures from the specified path:
 
-  <info>console fixtures:load</info>
+  <info>console fixtures:load --append path/dir1 path/dir2 path/dir3</info>
 
 You can specified EntityManager name for this operation
-  <info>console fixtures:load --em name</info>
+  <info>console fixtures:load --em=emName</info>
 
 If you want to append the fixtures instead of flushing the database first you can use the <info>--append</info> option:
 
@@ -77,10 +77,8 @@ EOT
             $em = $this->getDoctrine()->getManager();
         }
 
-        $dirOrFile = $input->getArgument('fixtures-path');
-        if ($dirOrFile) {
-            $paths = is_array($dirOrFile) ? $dirOrFile : array($dirOrFile);
-        } else {
+        $paths = $input->getArgument('fixtures-path');
+        if (! $paths) {
             throw new InvalidArgumentException("Please provide datafixtures path");
         }
 
@@ -88,7 +86,9 @@ EOT
         foreach ($paths as $path) {
             if (is_dir($path)) {
                 $loader->loadFromDirectory($path);
+                continue;
             }
+            $loader->loadFromFile($path);
         }
         $fixtures = $loader->getFixtures();
         if (!$fixtures) {
