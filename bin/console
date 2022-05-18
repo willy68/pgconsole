@@ -25,7 +25,6 @@
  */
 
 use Composer\InstalledVersions;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Dotenv\Dotenv;
 use Application\Console\DICommandLoader;
 use Doctrine\Persistence\ManagerRegistry;
@@ -35,6 +34,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\Migrations\Configuration\Migration\PhpFile;
 use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 return (static function (): int {
 $autoloadFiles = [
@@ -86,7 +86,7 @@ $console->setCatchExceptions(false);
 $c = $app->getContainer();
 
 // ORM commands
-$helperSet = ConsoleRunner::createHelperSet($c->get(EntityManager::class));
+$helperSet = ConsoleRunner::createHelperSet($c->get(EntityManagerInterface::class));
 $console->setHelperSet($helperSet);
 ConsoleRunner::addCommands($console);
 
