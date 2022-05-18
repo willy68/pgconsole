@@ -64,7 +64,14 @@ if (! $autoloaderFound) {
 
 $basePath = dirname(__DIR__, 4);
 
-$app = require $basePath . '/app/Bootstrap/Bootstrap.php';
+$bootstrapFile = $basePath . '/app/Bootstrap/Bootstrap.php';
+
+if (!file_exists($bootstrapFile)) {
+    fwrite(STDERR, 'app/Bootstrap/Bootstrap.php could not be found' . PHP_EOL);
+    exit(1);
+}
+
+$app = require $bootstrapFile;
 
 if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
     $dotenv = new Dotenv();
@@ -86,19 +93,23 @@ $console->setCatchExceptions(false);
 $c = $app->getContainer();
 
 // ORM commands
-$helperSet = ConsoleRunner::createHelperSet($c->get(EntityManagerInterface::class));
-$console->setHelperSet($helperSet);
-ConsoleRunner::addCommands($console);
+if ($c->has(EntityManagerInterface::class)) {
+    $helperSet = ConsoleRunner::createHelperSet($c->get(EntityManagerInterface::class));
+    $console->setHelperSet($helperSet);
+    ConsoleRunner::addCommands($console);
+}
 
 // Migrations commands
-$configurations = new PhpFile(getcwd() . DIRECTORY_SEPARATOR . 'migrations.php');
-$Manager = $c->get(ManagerRegistry::class);
-
-$dependencyFactory = DependencyFactory::fromEntityManager(
-    $configurations,
-    ManagerRegistryEntityManager::withSimpleDefault($Manager, 'default')
-    );
-ConsoleMigrationsRunner::addCommands($console, $dependencyFactory);
+if ($c->has(ManagerRegistry::class)) {
+    $configurations = new PhpFile(getcwd() . DIRECTORY_SEPARATOR . 'migrations.php');
+    $Manager = $c->get(ManagerRegistry::class);
+    
+    $dependencyFactory = DependencyFactory::fromEntityManager(
+        $configurations,
+        ManagerRegistryEntityManager::withSimpleDefault($Manager, 'default')
+        );
+    ConsoleMigrationsRunner::addCommands($console, $dependencyFactory);
+}
 
 // PgConsole commands
 $console->setCommandLoader(DICommandLoader::getDICommandLoader($c, $c->get('console.commands')));
