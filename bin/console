@@ -36,6 +36,7 @@ use Doctrine\Migrations\Configuration\Migration\PhpFile;
 use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
 
+return (static function (): int {
 $autoloadFiles = [
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
@@ -63,7 +64,7 @@ if (! $autoloaderFound) {
 
 $basePath = dirname(__DIR__, 4);
 
-require $basePath . '/app/Bootstrap/Bootstrap.php';
+$app = require $basePath . '/app/Bootstrap/Bootstrap.php';
 
 if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
     $dotenv = new Dotenv();
@@ -80,7 +81,7 @@ else {
 
 $version = InstalledVersions::getVersion('willy68/pgconsole');
 $console = new ConsoleApplication($config, $basePath, 'PgConsole', $version);
-$console->setCatchExceptions(true);
+$console->setCatchExceptions(false);
 
 $c = $app->getContainer();
 
@@ -102,4 +103,6 @@ ConsoleMigrationsRunner::addCommands($console, $dependencyFactory);
 // PgConsole commands
 $console->setCommandLoader(DICommandLoader::getDICommandLoader($c, $c->get('console.commands')));
 
-$console->run();
+return $console->run();
+
+})();
