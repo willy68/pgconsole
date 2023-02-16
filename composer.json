@@ -16,7 +16,7 @@
         "doctrine/orm": "^2.11",
         "doctrine/migrations": "^3.5",
         "doctrine/data-fixtures": "^1.5",
-        "willy68/pgmodule": "dev-main"
+        "willy68/pgmodule": "@dev"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.6"
