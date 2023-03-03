@@ -10,9 +10,9 @@
         }
     ],
     "require": {
-        "symfony/console": "^5.0",
+        "symfony/console": "^6.0",
         "psr/container": "^2.0",
-        "symfony/dotenv": "^5.2",
+        "symfony/dotenv": "^6.0",
         "doctrine/orm": "^2.11",
         "doctrine/migrations": "^3.5",
         "doctrine/data-fixtures": "^1.5",

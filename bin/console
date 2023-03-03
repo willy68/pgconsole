@@ -87,7 +87,7 @@ return (static function (): int {
 
     $version = InstalledVersions::getVersion('willy68/pgconsole');
     $console = new ConsoleApplication($config, $basePath, 'PgConsole', $version);
-    $console->setCatchExceptions(false);
+    $console->setCatchExceptions(true);
 
     $c = $app->getContainer();
 

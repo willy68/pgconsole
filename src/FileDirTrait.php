@@ -13,8 +13,8 @@ trait FileDirTrait
     protected function createDir(string $dir): int
     {
         if (!is_dir($dir)) {
-            $oldumask = umask(0);
-            umask($oldumask);
+            $oldUmask = umask(0);
+            umask($oldUmask);
             if (!mkdir($dir, 0777, true)) {
                 return -1;
             }
