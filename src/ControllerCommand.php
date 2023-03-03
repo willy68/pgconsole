@@ -5,6 +5,7 @@ namespace Application\Console;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -48,15 +49,14 @@ class ControllerCommand extends AbstractPHPCommand
     /**
      * Make single controller
      *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int
      */
     public function makeController(InputInterface $input, OutputInterface $output): int
     {
         $model = $this->model;
-        $dir = $this->dir ? $this->dir
-            : $this->controllerDir;
+        $dir = $this->dir ?: $this->controllerDir;
         /** @var ConsoleOutputInterface $output */
         $sectionDir = $output->section();
         $io = new SymfonyStyle($input, $sectionDir);

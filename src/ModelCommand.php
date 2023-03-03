@@ -47,15 +47,14 @@ class ModelCommand extends AbstractModelCommand
     /**
      *
      *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int
      */
     public function makeModel(InputInterface $input, OutputInterface $output): int
     {
         $model = $this->model;
-        $dir = $this->dir ? $this->dir
-            : $this->modelDir;
+        $dir = $this->dir ?: $this->modelDir;
         /** @var ConsoleOutputInterface $output */
         $sectionDir = $output->section();
         $io = new SymfonyStyle($input, $sectionDir);

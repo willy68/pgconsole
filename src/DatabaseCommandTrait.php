@@ -2,6 +2,7 @@
 
 namespace Application\Console;
 
+use PDOStatement;
 use Psr\Container\ContainerInterface;
 
 trait DatabaseCommandTrait
@@ -10,7 +11,7 @@ trait DatabaseCommandTrait
      * Undocumented function
      *
      * @param string $query
-     * @return \PDOStatement|bool
+     * @return PDOStatement|bool
      */
     protected function getTables(string $query)
     {
@@ -22,7 +23,7 @@ trait DatabaseCommandTrait
      * Undocumented function
      *
      * @param string $query
-     * @return \PDOStatement|bool
+     * @return PDOStatement|bool
      */
     protected function getColumns(string $query)
     {

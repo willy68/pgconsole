@@ -7,6 +7,7 @@
 namespace Application\Console;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -55,6 +56,9 @@ EOT
         );
     }
 
+    /**
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $connectionName = $input->getOption('connection');

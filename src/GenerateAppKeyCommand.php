@@ -2,7 +2,7 @@
 
 namespace Application\Console;
 
-use Application\Console\ConsoleApplication;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -24,6 +24,9 @@ class GenerateAppKeyCommand extends Command
         );
     }
 
+    /**
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $this->getRandomKey();
@@ -40,7 +43,7 @@ class GenerateAppKeyCommand extends Command
         if (file_exists($path)) {
             file_put_contents(
                 $path,
-                preg_replace('/(APP_KEY=)(\s|.*)\n/', ("APP_KEY={$key}\n"), file_get_contents($path))
+                preg_replace('/(APP_KEY=)(\s|.*)\n/', ("APP_KEY=$key\n"), file_get_contents($path))
             );
         }
 
@@ -53,8 +56,9 @@ class GenerateAppKeyCommand extends Command
      * Generate a random key for the application.
      *
      * @return string
+     * @throws Exception
      */
-    protected function getRandomKey()
+    protected function getRandomKey(): string
     {
         return base64_encode(random_bytes(32));
     }

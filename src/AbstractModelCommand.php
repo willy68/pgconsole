@@ -27,9 +27,9 @@ namespace App\Models;
 
 use ActiveRecord;
 
-class {$modelClass} extends ActiveRecord\Model
+class $modelClass extends ActiveRecord\Model
 {
-    public static \$table_name = '{$modelName}';
+    public static \$table_name = '$modelName';
 }";
     }
 }

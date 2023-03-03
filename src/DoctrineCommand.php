@@ -6,10 +6,9 @@
 
 namespace Application\Console;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 
 /**
@@ -34,7 +33,7 @@ abstract class DoctrineCommand extends Command
      *
      * @return EntityGenerator
      */
-    protected function getEntityGenerator()
+    protected function getEntityGenerator(): EntityGenerator
     {
         $entityGenerator = new EntityGenerator();
         $entityGenerator->setGenerateAnnotations(false);
@@ -50,31 +49,28 @@ abstract class DoctrineCommand extends Command
     /**
      * Get a doctrine entity manager by symfony name.
      *
-     * @param string   $name
+     * @param string $name
      *
-     * @return EntityManager
+     * @return ObjectManager
      */
-    protected function getEntityManager($name)
+    protected function getEntityManager(string $name): ObjectManager
     {
-        $manager = $this->getDoctrine()->getManager($name);
-
-        return $manager;
+        return $this->getDoctrine()->getManager($name);
     }
 
     /**
      * Get a doctrine dbal connection by symfony name.
      *
      * @param string $name
-     *
-     * @return Connection
+     * @return object
      */
-    protected function getDoctrineConnection($name)
+    protected function getDoctrineConnection(string $name)
     {
         return $this->getDoctrine()->getConnection($name);
     }
 
     /** @return ManagerRegistry */
-    protected function getDoctrine()
+    protected function getDoctrine(): ManagerRegistry
     {
         return $this->doctrine;
     }

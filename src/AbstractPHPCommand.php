@@ -13,7 +13,7 @@ class AbstractPHPCommand extends AbstractCommand
     protected $dir = null;
 
     /**
-     * saved parsed template in file
+     * Saved parsed template in file
      *
      * @param string $modelName
      * @param string $filename
@@ -30,7 +30,7 @@ class AbstractPHPCommand extends AbstractCommand
     /**
      * get parsed controller string
      *
-     * @param string $model_name
+     * @param string $modelName
      * @return string
      */
     protected function getPHPController(string $modelName): string
@@ -38,13 +38,12 @@ class AbstractPHPCommand extends AbstractCommand
         $modelClass = $this->getClassName($modelName);
 
         if ($this->template && file_exists($this->template)) {
-            $controller = include $this->template;
-            return $controller;
+            return include $this->template;
         } else {
             return "<?php
-namespace " . $this->namespace . "\\{$modelClass};
+namespace " . $this->namespace . "\\$modelClass;
   
-use App\Models\\{$modelClass};
+use App\Models\\$modelClass;
 use GuzzleHttp\Psr7\Response;
 use App\Api\AbstractApiController;
 use Psr\Http\Message\ResponseInterface;
@@ -58,7 +57,7 @@ class {$modelClass}Controller extends AbstractApiController
      *
      * @var string
      */
-    protected \$model = {$modelClass}::class;
+    protected \$model = $modelClass::class;
 
     /**
      * Default to 'entreprise_id'

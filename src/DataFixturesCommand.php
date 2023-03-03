@@ -2,6 +2,7 @@
 
 namespace Application\Console;
 
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Doctrine\Common\DataFixtures\Loader;
 use Symfony\Component\Console\Input\InputOption;
@@ -96,6 +97,7 @@ EOT
                 sprintf('Could not find any fixtures to load in: %s', "\n\n- " . implode("\n- ", $paths))
             );
         }
+        /** @var EntityManagerInterface $em */
         $purger = new ORMPurger($em);
         $purger->setPurgeMode(
             ($input->getOption('purge-with-truncate'))

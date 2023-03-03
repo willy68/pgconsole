@@ -2,8 +2,6 @@
 
 namespace Application\Console;
 
-use DI\ContainerBuilder;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 
 class ConsoleApplication extends Application
@@ -26,31 +24,7 @@ class ConsoleApplication extends Application
     }
 
     /**
-     * Get DI container
-     *
-     * @return ContainerInterface
-     * @throws Exception
-     */
-    public function getContainer(): ContainerInterface
-    {
-        if ($this->container === null) {
-            $builder = new ContainerBuilder();
-            $env = getenv('ENV') ?: 'production';
-            $env = 'dev';
-            if ($env === 'production') {
-                $builder->enableCompilation('tmp/di');
-                $builder->writeProxiesToFile(true, 'tmp/proxies');
-            }
-            foreach ($this->config as $config) {
-                $builder->addDefinitions($config);
-            }
-            $this->container = $builder->build();
-        }
-        return $this->container;
-    }
-
-    /**
-     * return base path
+     * Return base path
      *
      * @return string
      */

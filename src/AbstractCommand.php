@@ -20,7 +20,7 @@ class AbstractCommand extends SymfonyCommand
     }
 
     /**
-     * @param string $fieldName
+     * @param string $modelName
      * @return string
      */
     protected function getclassName(string $modelName): string

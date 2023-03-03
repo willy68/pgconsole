@@ -11,8 +11,8 @@
 
 namespace Application\Console;
 
+use RuntimeException;
 use Symfony\Component\Dotenv\Dotenv;
-use Application\Console\ConsoleApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -33,7 +33,7 @@ class DumpEnvCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $_SERVER['APP_ENV'] = $env = $input->getArgument('env');
 
@@ -66,7 +66,7 @@ EOF;
     {
 
         if (!class_exists(Dotenv::class)) {
-            throw new \RuntimeException('Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.');
+            throw new RuntimeException('Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.');
         }
 
         $dotenv = new Dotenv();

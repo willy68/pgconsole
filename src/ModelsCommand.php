@@ -3,7 +3,9 @@
 namespace Application\Console;
 
 use PDO;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,13 +35,17 @@ class ModelsCommand extends AbstractModelCommand
     /**
      * pdo instance
      *
-     * @var \PDO
+     * @var PDO
      */
     protected $dao = null;
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __construct(ContainerInterface $c)
     {
-        $this->dao = $c->get(\PDO::class);
+        $this->dao = $c->get(PDO::class);
         $this->db = $c->get('database.name');
         parent::__construct();
     }
@@ -73,8 +79,8 @@ class ModelsCommand extends AbstractModelCommand
     /**
      *
      *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int
      */
     public function makeModels(InputInterface $input, OutputInterface $output): int
@@ -84,14 +90,14 @@ class ModelsCommand extends AbstractModelCommand
         $io = new SymfonyStyle($input, $sectionDir);
         $tables = $this->getTables($this->query . $this->db);
 
-        $dir = $this->dir ? $this->dir : $this->modelDir;
+        $dir = $this->dir ?: $this->modelDir;
         if ($this->createDir($dir) === -1) {
             $io->error('Fin du programme: Wrong directory');
             return -1;
         }
         $io->write("<info>Creation du dossier " . $dir . "</info>");
 
-        $table = $tables->fetchAll(\PDO::FETCH_NUM);
+        $table = $tables->fetchAll(PDO::FETCH_NUM);
         $sectionFile = $output->section();
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelper('formatter');
@@ -101,7 +107,7 @@ class ModelsCommand extends AbstractModelCommand
         foreach ($table as $tab) {
             $model = $tab[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
-            if ($this->saveModel($model, $file, $sectionFile) === -1) {
+            if ($this->saveModel($model, $file) === -1) {
                 $formattedFileSection = $formatter->formatBlock(
                     "Le fichier " . $file . " existe déjà, opération non permise",
                     'error'

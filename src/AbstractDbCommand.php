@@ -2,7 +2,10 @@
 
 namespace Application\Console;
 
+use PDO;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AbstractDbCommand extends AbstractCommand
 {
@@ -25,13 +28,18 @@ class AbstractDbCommand extends AbstractCommand
     /**
      * pdo instance
      *
-     * @var \PDO
+     * @var PDO
      */
     protected $dao = null;
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __construct(ContainerInterface $c)
     {
-        $this->dao = $c->get(\PDO::class);
+        parent::__construct();
+        $this->dao = $c->get(PDO::class);
         $this->db = $c->get('database.name');
     }
 }

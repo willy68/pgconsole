@@ -24,96 +24,95 @@
  * IN THE SOFTWARE.
  */
 
-use Composer\InstalledVersions;
-use Symfony\Component\Dotenv\Dotenv;
-use Application\Console\DICommandLoader;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Migrations\DependencyFactory;
 use Application\Console\ConsoleApplication;
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Doctrine\Migrations\Configuration\Migration\PhpFile;
-use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
+use Application\Console\DICommandLoader;
+use Composer\InstalledVersions;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
+use Doctrine\Migrations\Configuration\Migration\PhpFile;
+use Doctrine\Migrations\DependencyFactory;
+use Doctrine\Migrations\Tools\Console\ConsoleRunner as ConsoleMigrationsRunner;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Dotenv\Dotenv;
 
 return (static function (): int {
-$autoloadFiles = [
-    __DIR__ . '/../vendor/autoload.php',
-    __DIR__ . '/../../../autoload.php',
-];
+    $autoloadFiles = [
+        __DIR__ . '/../vendor/autoload.php',
+        __DIR__ . '/../../../autoload.php',
+    ];
 
-$autoloaderFound = false;
-foreach ($autoloadFiles as $autoloadFile) {
-    if (! file_exists($autoloadFile)) {
-        continue;
+    $autoloaderFound = false;
+    foreach ($autoloadFiles as $autoloadFile) {
+        if (!file_exists($autoloadFile)) {
+            continue;
+        }
+
+        require_once $autoloadFile;
+        $autoloaderFound = true;
     }
 
-    require_once $autoloadFile;
-    $autoloaderFound = true;
-}
+    if (!$autoloaderFound) {
+        if (extension_loaded('phar') && Phar::running() !== '') {
+            fwrite(STDERR, 'The PHAR was built without dependencies!' . PHP_EOL);
+            exit(1);
+        }
 
-if (! $autoloaderFound) {
-    if (extension_loaded('phar') && \Phar::running() !== '') {
-        fwrite(STDERR, 'The PHAR was built without dependencies!' . PHP_EOL);
+        fwrite(STDERR, 'vendor/autoload.php could not be found. Did you run `composer install`?' . PHP_EOL);
         exit(1);
     }
 
-    fwrite(STDERR, 'vendor/autoload.php could not be found. Did you run `composer install`?' . PHP_EOL);
-    exit(1);
-}
+    $basePath = dirname(__DIR__, 4);
 
-$basePath = dirname(__DIR__, 4);
+    $bootstrapFile = $basePath . '/app/Bootstrap/Bootstrap.php';
 
-$bootstrapFile = $basePath . '/app/Bootstrap/Bootstrap.php';
+    if (!file_exists($bootstrapFile)) {
+        fwrite(STDERR, 'app/Bootstrap/Bootstrap.php could not be found' . PHP_EOL);
+        exit(1);
+    }
 
-if (!file_exists($bootstrapFile)) {
-    fwrite(STDERR, 'app/Bootstrap/Bootstrap.php could not be found' . PHP_EOL);
-    exit(1);
-}
+    $app = require $bootstrapFile;
 
-$app = require $bootstrapFile;
+    if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv($basePath . '/.env');
+    }
 
-if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
-    $dotenv = new Dotenv();
-    $dotenv->loadEnv($basePath . '/.env');
-}
+    $config[] = dirname(__DIR__) . '/config/config.php';
+    if (file_exists($basePath . '/config/database.php')) {
+        $config[] = $basePath . '/config/database.php';
+    } else {
+        $config[] = dirname(__DIR__) . '/config/database.php';
+    }
 
-$config[] = dirname(__DIR__) . '/config/config.php';
-if (file_exists($basePath . '/config/database.php')) {
-    $config[] = $basePath . '/config/database.php';
-}
-else {
-    $config[] = dirname(__DIR__) . '/config/database.php';
-}
+    $version = InstalledVersions::getVersion('willy68/pgconsole');
+    $console = new ConsoleApplication($config, $basePath, 'PgConsole', $version);
+    $console->setCatchExceptions(false);
 
-$version = InstalledVersions::getVersion('willy68/pgconsole');
-$console = new ConsoleApplication($config, $basePath, 'PgConsole', $version);
-$console->setCatchExceptions(false);
-
-$c = $app->getContainer();
+    $c = $app->getContainer();
 
 // ORM commands
-if ($c->has(EntityManagerInterface::class)) {
-    $helperSet = ConsoleRunner::createHelperSet($c->get(EntityManagerInterface::class));
-    $console->setHelperSet($helperSet);
-    ConsoleRunner::addCommands($console);
-}
+    if ($c->has(EntityManagerInterface::class)) {
+        $helperSet = ConsoleRunner::createHelperSet($c->get(EntityManagerInterface::class));
+        $console->setHelperSet($helperSet);
+        ConsoleRunner::addCommands($console);
+    }
 
 // Migrations commands
-if ($c->has(ManagerRegistry::class)) {
-    $configurations = new PhpFile(getcwd() . DIRECTORY_SEPARATOR . 'migrations.php');
-    $Manager = $c->get(ManagerRegistry::class);
-    
-    $dependencyFactory = DependencyFactory::fromEntityManager(
-        $configurations,
-        ManagerRegistryEntityManager::withSimpleDefault($Manager, 'default')
+    if ($c->has(ManagerRegistry::class)) {
+        $configurations = new PhpFile(getcwd() . DIRECTORY_SEPARATOR . 'migrations.php');
+        $Manager = $c->get(ManagerRegistry::class);
+
+        $dependencyFactory = DependencyFactory::fromEntityManager(
+            $configurations,
+            ManagerRegistryEntityManager::withSimpleDefault($Manager, 'default')
         );
-    ConsoleMigrationsRunner::addCommands($console, $dependencyFactory);
-}
+        ConsoleMigrationsRunner::addCommands($console, $dependencyFactory);
+    }
 
 // PgConsole commands
-$console->setCommandLoader(DICommandLoader::getDICommandLoader($c, $c->get('console.commands')));
+    $console->setCommandLoader(DICommandLoader::getDICommandLoader($c, $c->get('console.commands')));
 
-return $console->run();
+    return $console->run();
 
 })();

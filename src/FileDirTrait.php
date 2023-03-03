@@ -14,11 +14,10 @@ trait FileDirTrait
     {
         if (!is_dir($dir)) {
             $oldumask = umask(0);
+            umask($oldumask);
             if (!mkdir($dir, 0777, true)) {
-                umask($oldumask);
                 return -1;
             }
-            umask($oldumask);
         }
         return 0;
     }
@@ -39,8 +38,7 @@ trait FileDirTrait
                 chmod($filename, 0666);
                 return 0;
             }
-        } else {
-            return -1;
         }
+        return -1;
     }
 }

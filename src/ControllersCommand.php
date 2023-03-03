@@ -2,8 +2,12 @@
 
 namespace Application\Console;
 
+use PDO;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -31,13 +35,17 @@ class ControllersCommand extends AbstractPHPCommand
     /**
      * pdo instance
      *
-     * @var \PDO
+     * @var PDO
      */
     protected $dao = null;
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __construct(ContainerInterface $c)
     {
-        $this->dao = $c->get(\PDO::class);
+        $this->dao = $c->get(PDO::class);
         $this->db = $c->get('database.name');
         parent::__construct();
     }
@@ -71,15 +79,14 @@ class ControllersCommand extends AbstractPHPCommand
     /**
      * Make all controller
      *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int
      */
     public function makeController(InputInterface $input, OutputInterface $output): int
     {
         $tables = $this->getTables($this->query . $this->db);
-        $dir = $this->dir ? $this->dir
-            : $this->controllerDir;
+        $dir = $this->dir ?: $this->controllerDir;
         /** @var ConsoleOutputInterface $output */
         $sectionDir = $output->section();
         $io = new SymfonyStyle($input, $sectionDir);
@@ -89,7 +96,7 @@ class ControllersCommand extends AbstractPHPCommand
         }
         $io->write("<info>Creation du dossier " . $dir . "</info>");
 
-        $table = $tables->fetchAll(\PDO::FETCH_NUM);
+        $table = $tables->fetchAll(PDO::FETCH_NUM);
         $sectionFile = $output->section();
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelper('formatter');
