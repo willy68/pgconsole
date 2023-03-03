@@ -26,6 +26,7 @@
 
 use Application\Console\ConsoleApplication;
 use Application\Console\DICommandLoader;
+use Application\Console\ManagerRegistryProvider;
 use Composer\InstalledVersions;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
 use Doctrine\Migrations\Configuration\Migration\PhpFile;
@@ -91,21 +92,19 @@ return (static function (): int {
 
     $c = $app->getContainer();
 
+    $manager = $c->get(ManagerRegistry::class);
 // ORM commands
     if ($c->has(EntityManagerInterface::class)) {
-        $helperSet = ConsoleRunner::createHelperSet($c->get(EntityManagerInterface::class));
-        $console->setHelperSet($helperSet);
-        ConsoleRunner::addCommands($console);
+        ConsoleRunner::addCommands($console, new ManagerRegistryProvider($manager));
     }
 
 // Migrations commands
     if ($c->has(ManagerRegistry::class)) {
         $configurations = new PhpFile(getcwd() . DIRECTORY_SEPARATOR . 'migrations.php');
-        $Manager = $c->get(ManagerRegistry::class);
 
         $dependencyFactory = DependencyFactory::fromEntityManager(
             $configurations,
-            ManagerRegistryEntityManager::withSimpleDefault($Manager, 'default')
+            ManagerRegistryEntityManager::withSimpleDefault($manager, 'default')
         );
         ConsoleMigrationsRunner::addCommands($console, $dependencyFactory);
     }
