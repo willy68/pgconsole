@@ -73,7 +73,6 @@ return (static function (): int {
     }
 
     $app = require $bootstrapFile;
-    $app->init();
 
     if (file_exists($basePath . '/.env') && class_exists(Dotenv::class)) {
         $dotenv = new Dotenv();
