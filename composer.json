@@ -11,7 +11,7 @@
     ],
     "require": {
         "symfony/console": "^6.0",
-        "psr/container": "^2.0",
+        "psr/container": "^1.0",
         "symfony/dotenv": "^6.0",
         "doctrine/orm": "^2.11",
         "doctrine/migrations": "^3.5",
