@@ -89,9 +89,9 @@ EOT
         unset($params['dbname'], $params['path'], $params['url']);
 
         $tmpConnection = DriverManager::getConnection($params);
-        $tmpConnection->connect();
+        $tmpConnection->getServerVersion();
 
-        $shouldNotCreateDatabase = $ifNotExists && in_array($name, $tmpConnection->getSchemaManager()->listDatabases());
+        $shouldNotCreateDatabase = $ifNotExists && in_array($name, $tmpConnection->createSchemaManager()->listDatabases());
 
         // Only quote if we don't have a path
         if (! $hasPath) {
@@ -103,7 +103,7 @@ EOT
             if ($shouldNotCreateDatabase) {
                 $output->writeln(sprintf('<info>Database <comment>%s</comment> for connection named <comment>%s</comment> already exists. Skipped.</info>', $name, $connectionName));
             } else {
-                $tmpConnection->getSchemaManager()->createDatabase($name);
+                $tmpConnection->createSchemaManager()->createDatabase($name);
                 $output->writeln(sprintf('<info>Created database <comment>%s</comment> for connection named <comment>%s</comment></info>', $name, $connectionName));
             }
         } catch (Throwable $e) {

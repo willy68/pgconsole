@@ -80,7 +80,7 @@ EOT
 
         $paths = $input->getArgument('fixtures-path');
         if (! $paths) {
-            throw new InvalidArgumentException("Please provide datafixtures path");
+            throw new InvalidArgumentException("Please provide data fixtures path");
         }
 
         $loader = new Loader();

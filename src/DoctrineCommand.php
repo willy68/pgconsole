@@ -6,7 +6,6 @@
 
 namespace Application\Console;
 
-use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
@@ -31,8 +30,9 @@ abstract class DoctrineCommand extends Command
     /**
      * get a doctrine entity generator
      *
-     * @return EntityGenerator
+     * @return //EntityGenerator
      */
+	/*
     protected function getEntityGenerator(): EntityGenerator
     {
         $entityGenerator = new EntityGenerator();
@@ -45,6 +45,7 @@ abstract class DoctrineCommand extends Command
 
         return $entityGenerator;
     }
+	*/
 
     /**
      * Get a doctrine entity manager by symfony name.
