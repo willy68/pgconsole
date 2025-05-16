@@ -14,7 +14,6 @@
         "psr/container": "^1.0",
         "symfony/dotenv": "^6.0",
         "doctrine/orm": "^3.3",
-        "doctrine/dbal": "^3.8.2 || ^4",
         "doctrine/migrations": "^3.5",
         "doctrine/data-fixtures": "^1.5",
         "willy68/pgmodule": "^1.0",
